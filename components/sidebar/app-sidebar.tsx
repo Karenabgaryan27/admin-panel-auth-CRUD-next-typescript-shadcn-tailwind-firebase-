@@ -115,7 +115,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton asChild className={`${"pointer-events-none text-gray-400"} px-3 py-[18px]`}>
-                <Link href="/admin/genrix">
+                <Link href="/">
                   <PanelLeft />
                   <span className="text-custom-sm">Genrix</span>
                 </Link>

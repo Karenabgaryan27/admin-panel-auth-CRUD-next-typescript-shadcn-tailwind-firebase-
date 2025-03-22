@@ -1,18 +1,19 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuthContext } from "@/contexts/AuthContext";
 import Link from "next/link";
 import { ButtonDemo, InputDemo } from "@/components/index";
 import localData from "@/localData";
-
+import useAlert from "@/hooks/alert/useAlert";
 const { googleLogo } = localData.images;
 
 const Login = () => {
   const [state, setState] = useState({ email: "", password: "" });
   const [isLoading, setIsLoading] = useState(false);
+  const { successAlert } = useAlert();
 
-  const { handleSignIn,handleSignInWithGoogle } = useAuthContext();
+  const { handleSignIn, handleSignInWithGoogle } = useAuthContext();
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setState((prev) => ({
@@ -25,6 +26,15 @@ const Login = () => {
     e.preventDefault();
     handleSignIn({ email: state.email, password: state.password, setIsLoading });
   };
+
+  
+  useEffect(() => {
+    const isSignedOut = sessionStorage.getItem("isSignedOut");
+    if (isSignedOut) {
+      setTimeout(() => successAlert("You’ve signed out successfully!"), 100);
+      sessionStorage.removeItem('isSignedOut');
+    }
+  }, []);
 
   return (
     <div className="login-page min-h-[100vh] flex items-center justify-center ">
@@ -75,7 +85,7 @@ const Login = () => {
           className={`w-full text-sm text-gray-700 `}
           disabled={isLoading}
           variant="outline"
-          onClick={()=>handleSignInWithGoogle({})}
+          onClick={() => handleSignInWithGoogle({})}
         />
       </div>
     </div>

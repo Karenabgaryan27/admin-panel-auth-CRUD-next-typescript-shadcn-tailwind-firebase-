@@ -1,6 +1,7 @@
 const images = {
   logo: "/assets/images/logo.png",
   exampleImage: "/assets/images/example.png",
+  placeholderImage: "/assets/images/placeholder.jpg",
   googleLogo: "/assets/images/google-logo.png",
 };
 

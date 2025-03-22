@@ -3,6 +3,7 @@
 import React, { useState, useEffect, createContext, useContext } from "react";
 import { db, auth } from "@/config/firebase";
 import { collection, getDocs, addDoc, deleteDoc, updateDoc, doc } from "firebase/firestore";
+import useAlert from "@/hooks/alert/useAlert";
 
 type StateType = {
   // movies: {id: string, name: string, releaseDate: number, receivedAnOscar: boolean, country:string}[]
@@ -14,8 +15,8 @@ type ApiContextType = {
   state: StateType;
   setState: (newState: StateType) => void;
   getMovies: ({ setIsLoading }: { [key: string]: any }) => void;
-  addMovie: ({ name, releaseDate, setIsLoading }: { [key: string]: any }) => void;
-  updateMovie: ({ id, name, releaseDate, setIsLoading }: { [key: string]: any }) => void;
+  addMovie: ({ setIsLoading }: { [key: string]: any }) => void;
+  updateMovie: ({ id, setIsLoading, ...fields }: { [key: string]: any }) => void;
   deleteMovie: ({ id, setIsLoading }: { [key: string]: any }) => void;
 };
 
@@ -33,6 +34,7 @@ export default function ApiProvider({
     },
     users: [],
   });
+  const {  successAlert,  errorAlert } = useAlert();
 
   const moviesCollectionRef = collection(db, "movies");
 
@@ -46,40 +48,49 @@ export default function ApiProvider({
       setState((prev) => ({ ...prev, movies: { isLoading: false, list: data } }));
       console.log(data);
     } catch (err) {
+      errorAlert(err + "=getMovies= request error");
       console.error(err, "=getMovies= request error");
     }
     setIsLoading(false);
     setState((prev) => ({ ...prev, movies: { ...prev.movies, isLoading: false } }));
   };
 
-  const addMovie = async ({ name = "", releaseDate = 0, setIsLoading = (_: boolean) => {} }) => {
+  const addMovie = async ({ setIsLoading = (_: boolean) => {}, ...fields }) => {
     setIsLoading(true);
+
+    const filteredData = {
+      ...Object.fromEntries(Object.entries(fields).filter(([_, v]) => v)),
+      createdAt: new Date(),
+      userId: auth?.currentUser?.uid,
+    };
+
     try {
-      const res = await addDoc(moviesCollectionRef, {
-        name,
-        releaseDate: Number(releaseDate),
-        receivedAnOscar: false,
-        country: "USA",
-        userId: auth?.currentUser?.uid
-      });
+      const res = await addDoc(moviesCollectionRef, filteredData);
       getMovies({});
       console.log(res);
+      successAlert("Movie has been created successfully.");
     } catch (err) {
+      errorAlert(err + "=addMovie= request error");
       console.error(err, "=addMovie= request error");
     }
     setIsLoading(false);
   };
 
-  const updateMovie = async ({ id = "", name = "", releaseDate = 0, setIsLoading = (_: boolean) => {} }) => {
+  const updateMovie = async ({ id = "", setIsLoading = (_: boolean) => {}, ...fields }) => {
     setIsLoading(true);
+
+    const filteredData = {
+      ...Object.fromEntries(Object.entries(fields).filter(([_, v]) => v)),
+      updatedAt: new Date(),
+    };
+
     try {
       const movieDoc = doc(db, "movies", id);
-      await updateDoc(movieDoc, {
-        name,
-        releaseDate: Number(releaseDate),
-      });
+      await updateDoc(movieDoc, filteredData);
       getMovies({});
+      successAlert("Movie has been updated successfully.");
     } catch (err) {
+      errorAlert(err + "=updateMovie= request error");
       console.error(err, "=updateMovie= request error");
     }
     setIsLoading(false);
@@ -91,7 +102,9 @@ export default function ApiProvider({
       const movieDoc = doc(db, "movies", id);
       await deleteDoc(movieDoc);
       getMovies({});
+      successAlert("Movie has been deleted successfully.");
     } catch (err) {
+      errorAlert(err + "=deleteMovie= request error");
       console.error(err, "=deleteMovie= request error");
     }
     setIsLoading(false);

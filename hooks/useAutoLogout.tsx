@@ -9,7 +9,7 @@ const useAutoLogout = (autoLogoutTime = 15 * 60 * 1000) => {
   const handleSignOut = async () => {
     try {
         await signOut(auth);
-        window.location.href = '/login';
+        window.location.href = '/admin/login';
     } catch (err) {
       console.error('Error signing out:', err);
     }

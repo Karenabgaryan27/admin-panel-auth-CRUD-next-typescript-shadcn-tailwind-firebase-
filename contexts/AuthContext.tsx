@@ -20,6 +20,7 @@ import {
   reauthenticateWithCredential,
 } from "firebase/auth";
 import useAutoLogout from "@/hooks/useAutoLogout";
+import useAlert from "@/hooks/alert/useAlert";
 
 type StateType = {
   [key: string]: any;
@@ -48,7 +49,7 @@ type AuthContextType = {
 
 export const AuthContext = createContext<AuthContextType | null>(null);
 
-const adminRoutes = ['/admin',"/admin/login", "/admin/register", "/admin/forgot-password"];
+const adminRoutes = ["/admin", "/admin/login", "/admin/register", "/admin/forgot-password"];
 
 export default function AuthProvider({
   children,
@@ -60,11 +61,15 @@ export default function AuthProvider({
   const router = useRouter();
   const pathname = usePathname();
 
+  const { successAlert, errorAlert } = useAlert();
+
   const handleSignIn = async ({ email = "", password = "", setIsLoading = (_: boolean) => {} }) => {
     setIsLoading(true);
     try {
       await signInWithEmailAndPassword(auth, email, password);
+      successAlert("You’ve signed in successfully!");
     } catch (err) {
+      errorAlert(err + "=handleSignIn= request error");
       console.error(err, "=handleSignIn= request error");
     }
     setIsLoading(false);
@@ -75,7 +80,9 @@ export default function AuthProvider({
     try {
       const provider = new GoogleAuthProvider();
       await signInWithPopup(auth, provider);
+      successAlert("You’ve signed in successfully!");
     } catch (err) {
+      errorAlert(err + "=handleSignInWithGoogle= request error");
       console.error(err, "=handleSignInWithGoogle= request error");
     }
     setIsLoading(false);
@@ -86,7 +93,9 @@ export default function AuthProvider({
     try {
       const res = await createUserWithEmailAndPassword(auth, email, password);
       handleEmailVerification({ user: res.user });
+      successAlert("You’ve signed up successfully!");
     } catch (err) {
+      errorAlert(err + "=handleSignUp= request error");
       console.error(err, "=handleSignUp= request error");
     }
     setIsLoading(false);
@@ -96,8 +105,11 @@ export default function AuthProvider({
     setIsLoading(true);
     try {
       await signOut(auth);
+      // successAlert("You’ve signed out successfully!");
+      sessionStorage.setItem("isSignedOut", "true");
       router.push("/admin/login");
     } catch (err) {
+      errorAlert(err + "=handleSignOut= request error");
       console.error(err, "=handleSignOut= request error");
     }
     setIsLoading(false);
@@ -107,7 +119,9 @@ export default function AuthProvider({
     setIsLoading(true);
     try {
       await sendPasswordResetEmail(auth, email);
+      successAlert("Password reset link sent! Check your email.");
     } catch (err) {
+      errorAlert(err + "=handleResetPassword= request error");
       console.error(err, "=handleResetPassword= request error");
     }
     setIsLoading(false);
@@ -119,8 +133,9 @@ export default function AuthProvider({
     try {
       await updateEmail(currentUser, email);
       // handleEmailVerification({ user: res.user });
-      console.log("Email updated successfully!");
+      successAlert("Your email has been updated successfully!");
     } catch (err) {
+      errorAlert(err + "=handleUpdateEmail= request error");
       console.error(err, "=handleUpdateEmail= request error");
     }
     setIsLoading(false);
@@ -131,8 +146,9 @@ export default function AuthProvider({
     setIsLoading(true);
     try {
       await updatePassword(currentUser, password);
-      console.log("Password updated successfully!");
+      successAlert("Your password has been updated successfully!");
     } catch (err) {
+      errorAlert(err + "=handleUpdatePassword= request error");
       console.error(err, "=handleUpdatePassword= request error");
     }
     setIsLoading(false);
@@ -148,8 +164,9 @@ export default function AuthProvider({
     const credential = EmailAuthProvider.credential(email, password);
     try {
       await linkWithCredential(currentUser, credential);
-      console.log("Successfully linked email/password account!");
+      successAlert("Successfully linked email/password account!");
     } catch (err) {
+      errorAlert(err + "=handleLinkEmailPasswordAccount= request error");
       console.error(err, "=handleLinkEmailPasswordAccount= request error");
     }
     setIsLoading(false);
@@ -167,7 +184,9 @@ export default function AuthProvider({
       await sendEmailVerification(user, {
         url: `${window.location.origin}/dashboard`,
       });
+      successAlert("Verification email sent! Please check your inbox.");
     } catch (err) {
+      errorAlert(err + "=handleEmailVerification= request error");
       console.error(err, "=handleEmailVerification= request error");
     }
     setIsLoading(false);
@@ -179,8 +198,10 @@ export default function AuthProvider({
     try {
       const credential = EmailAuthProvider.credential(currentUser.email, password);
       await reauthenticateWithCredential(currentUser, credential);
+      successAlert("reauthenticated successfully");
       console.log("reauthenticated successfully");
     } catch (err) {
+      errorAlert(err + "=handleReauthenticate= request error");
       console.error(err, "=handleReauthenticate= request error");
     }
     setIsLoading(false);

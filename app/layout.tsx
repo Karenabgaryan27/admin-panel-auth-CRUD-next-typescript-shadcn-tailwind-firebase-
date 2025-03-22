@@ -4,6 +4,7 @@ import "@/styles/index.css";
 import Provider from "@/contexts/context";
 import AuthProvider from "@/contexts/AuthContext";
 import ApiProvider from "@/contexts/ApiContext";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,6 +40,7 @@ export default function RootLayout({
           <ApiProvider>
             <Provider>
               {children}
+              <Toaster />
             </Provider>
           </ApiProvider>
         </AuthProvider>
