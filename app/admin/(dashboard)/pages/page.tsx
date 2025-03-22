@@ -87,7 +87,7 @@ const SingleMovie = ({ id = "", name = "", releaseDate = "", imageBase64 = place
       </div>
 
       <div className="card-content mb-3 h-0 pt-[56.25%] relative">
-        <img className="rounded-lg absolute w-full h-full top-0" src={imageBase64} alt=""  />
+        <img className="rounded-lg absolute w-full h-full top-0 object-cover" src={imageBase64} alt=""  />
       </div>
 
       <div className="card-footer">

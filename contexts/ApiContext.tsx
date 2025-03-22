@@ -47,8 +47,8 @@ export default function ApiProvider({
       const data = res.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
       setState((prev) => ({ ...prev, movies: { isLoading: false, list: data } }));
       console.log(data);
-    } catch (err) {
-      errorAlert(err + "=getMovies= request error");
+    } catch (err:any) {
+      errorAlert(err.message || 'Internal server error. Please try again later.')
       console.error(err, "=getMovies= request error");
     }
     setIsLoading(false);
@@ -69,8 +69,8 @@ export default function ApiProvider({
       getMovies({});
       console.log(res);
       successAlert("Movie has been created successfully.");
-    } catch (err) {
-      errorAlert(err + "=addMovie= request error");
+    } catch (err:any) {
+      errorAlert(err.message || 'Internal server error. Please try again later.')
       console.error(err, "=addMovie= request error");
     }
     setIsLoading(false);
@@ -89,8 +89,8 @@ export default function ApiProvider({
       await updateDoc(movieDoc, filteredData);
       getMovies({});
       successAlert("Movie has been updated successfully.");
-    } catch (err) {
-      errorAlert(err + "=updateMovie= request error");
+    } catch (err:any) {
+      errorAlert(err.message || 'Internal server error. Please try again later.');
       console.error(err, "=updateMovie= request error");
     }
     setIsLoading(false);
@@ -103,8 +103,8 @@ export default function ApiProvider({
       await deleteDoc(movieDoc);
       getMovies({});
       successAlert("Movie has been deleted successfully.");
-    } catch (err) {
-      errorAlert(err + "=deleteMovie= request error");
+    } catch (err:any) {
+      errorAlert(err.message || 'Internal server error. Please try again later.')
       console.error(err, "=deleteMovie= request error");
     }
     setIsLoading(false);

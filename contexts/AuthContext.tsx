@@ -68,8 +68,8 @@ export default function AuthProvider({
     try {
       await signInWithEmailAndPassword(auth, email, password);
       successAlert("You’ve signed in successfully!");
-    } catch (err) {
-      errorAlert(err + "=handleSignIn= request error");
+    } catch (err: any) {
+      errorAlert(err.message || "Internal server error. Please try again later.");
       console.error(err, "=handleSignIn= request error");
     }
     setIsLoading(false);
@@ -81,8 +81,8 @@ export default function AuthProvider({
       const provider = new GoogleAuthProvider();
       await signInWithPopup(auth, provider);
       successAlert("You’ve signed in successfully!");
-    } catch (err) {
-      errorAlert(err + "=handleSignInWithGoogle= request error");
+    } catch (err: any) {
+      errorAlert(err.message || "Internal server error. Please try again later.");
       console.error(err, "=handleSignInWithGoogle= request error");
     }
     setIsLoading(false);
@@ -94,8 +94,8 @@ export default function AuthProvider({
       const res = await createUserWithEmailAndPassword(auth, email, password);
       handleEmailVerification({ user: res.user });
       successAlert("You’ve signed up successfully!");
-    } catch (err) {
-      errorAlert(err + "=handleSignUp= request error");
+    } catch (err: any) {
+      errorAlert(err.message || "Internal server error. Please try again later.");
       console.error(err, "=handleSignUp= request error");
     }
     setIsLoading(false);
@@ -108,8 +108,8 @@ export default function AuthProvider({
       // successAlert("You’ve signed out successfully!");
       sessionStorage.setItem("isSignedOut", "true");
       router.push("/admin/login");
-    } catch (err) {
-      errorAlert(err + "=handleSignOut= request error");
+    } catch (err: any) {
+      errorAlert(err.message || "Internal server error. Please try again later.");
       console.error(err, "=handleSignOut= request error");
     }
     setIsLoading(false);
@@ -120,8 +120,8 @@ export default function AuthProvider({
     try {
       await sendPasswordResetEmail(auth, email);
       successAlert("Password reset link sent! Check your email.");
-    } catch (err) {
-      errorAlert(err + "=handleResetPassword= request error");
+    } catch (err: any) {
+      errorAlert(err.message || "Internal server error. Please try again later.");
       console.error(err, "=handleResetPassword= request error");
     }
     setIsLoading(false);
@@ -134,8 +134,8 @@ export default function AuthProvider({
       await updateEmail(currentUser, email);
       // handleEmailVerification({ user: res.user });
       successAlert("Your email has been updated successfully!");
-    } catch (err) {
-      errorAlert(err + "=handleUpdateEmail= request error");
+    } catch (err: any) {
+      errorAlert(err.message || "Internal server error. Please try again later.");
       console.error(err, "=handleUpdateEmail= request error");
     }
     setIsLoading(false);
@@ -147,8 +147,8 @@ export default function AuthProvider({
     try {
       await updatePassword(currentUser, password);
       successAlert("Your password has been updated successfully!");
-    } catch (err) {
-      errorAlert(err + "=handleUpdatePassword= request error");
+    } catch (err: any) {
+      errorAlert(err.message || "Internal server error. Please try again later.");
       console.error(err, "=handleUpdatePassword= request error");
     }
     setIsLoading(false);
@@ -165,8 +165,8 @@ export default function AuthProvider({
     try {
       await linkWithCredential(currentUser, credential);
       successAlert("Successfully linked email/password account!");
-    } catch (err) {
-      errorAlert(err + "=handleLinkEmailPasswordAccount= request error");
+    } catch (err: any) {
+      errorAlert(err.message || "Internal server error. Please try again later.");
       console.error(err, "=handleLinkEmailPasswordAccount= request error");
     }
     setIsLoading(false);
@@ -185,8 +185,8 @@ export default function AuthProvider({
         url: `${window.location.origin}/dashboard`,
       });
       successAlert("Verification email sent! Please check your inbox.");
-    } catch (err) {
-      errorAlert(err + "=handleEmailVerification= request error");
+    } catch (err: any) {
+      errorAlert(err.message || "Internal server error. Please try again later.");
       console.error(err, "=handleEmailVerification= request error");
     }
     setIsLoading(false);
@@ -200,8 +200,8 @@ export default function AuthProvider({
       await reauthenticateWithCredential(currentUser, credential);
       successAlert("reauthenticated successfully");
       console.log("reauthenticated successfully");
-    } catch (err) {
-      errorAlert(err + "=handleReauthenticate= request error");
+    } catch (err: any) {
+      errorAlert(err.message || "Internal server error. Please try again later.");
       console.error(err, "=handleReauthenticate= request error");
     }
     setIsLoading(false);
