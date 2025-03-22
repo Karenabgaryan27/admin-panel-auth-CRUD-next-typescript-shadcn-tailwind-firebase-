@@ -6,14 +6,28 @@ import Link from "next/link";
 import { ButtonDemo, InputDemo } from "@/components/index";
 import localData from "@/localData";
 import useAlert from "@/hooks/alert/useAlert";
+import useJoiValidation from '@/hooks/joi-validation/useJoiValidation'
 const { googleLogo } = localData.images;
+
+type ValidationResult = {
+  error?: {
+    details: {
+      path: string[];
+      message: string;
+    }[];
+  };
+};
 
 const Login = () => {
   const [state, setState] = useState({ email: "", password: "" });
   const [isLoading, setIsLoading] = useState(false);
   const { successAlert } = useAlert();
-
   const { handleSignIn, handleSignInWithGoogle } = useAuthContext();
+
+  const { validateSignIn } = useJoiValidation();
+  const [wasSubmitted, setWasSubmitted] = useState(false);
+  const [result, setResult] = useState<ValidationResult>({});
+  const [errorMessages, setErrorMessages] = useState<Record<string, string>>({});
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setState((prev) => ({
@@ -24,10 +38,27 @@ const Login = () => {
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    handleSignIn({ email: state.email, password: state.password, setIsLoading });
+    const { error } = validateSignIn(state);
+    if (!error) {
+      handleSignIn({ email: state.email, password: state.password, setIsLoading });
+      console.log("Submit");
+    }
+    if (!error) return;
+    setWasSubmitted(true);
   };
 
-  
+  useEffect(() => setResult(validateSignIn(state)), [state]);
+
+  useEffect(() => {
+    if (!wasSubmitted) return;
+    const errors: Record<string, string> = {};
+    result?.error?.details.forEach((item) => {
+      if (errors[item.path[0]]) return;
+      errors[item.path[0]] = item.message;
+    });
+    setErrorMessages(errors);
+  }, [result, wasSubmitted]);
+
   useEffect(() => {
     const isSignedOut = sessionStorage.getItem("isSignedOut");
     if (isSignedOut) {
@@ -39,7 +70,7 @@ const Login = () => {
   return (
     <div className="login-page min-h-[100vh] flex items-center justify-center ">
       <div className="wrapper  w-full max-w-[360px] mx-auto shadow-lg !p-5 border border-gray-100 rounded-[15px]">
-        <form onSubmit={onSubmit} className="">
+        <form onSubmit={onSubmit} className={`${wasSubmitted ? "was-submitted" : ""}`}>
           <h2 className="text-2xl text-center mb-5">Login</h2>
           <InputDemo
             label="Email"
@@ -48,6 +79,8 @@ const Login = () => {
             type="text"
             callback={(e) => onChange(e)}
             className="mb-5"
+            errorMessage={errorMessages.email}
+            inputClassName={errorMessages.email ? "is-invalid" : "is-valid"}
           />
           <InputDemo
             label="Password"
@@ -56,6 +89,8 @@ const Login = () => {
             type="text"
             callback={(e) => onChange(e)}
             className="mb-5"
+            errorMessage={errorMessages.password}
+            inputClassName={errorMessages.password ? "is-invalid" : "is-valid"}
           />
 
           <Link href="/admin/forgot-password" className="text-xs mb-5 block text-blue-400 hover:underline">

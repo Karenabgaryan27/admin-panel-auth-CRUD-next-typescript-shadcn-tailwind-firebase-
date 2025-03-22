@@ -10,7 +10,7 @@ type InputDemoProps = React.InputHTMLAttributes<HTMLInputElement> & {
   inputClassName?: string;
   label?: ReactNode;
   callback?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  // errorMessage?: string;
+  errorMessage?: string;
   // successMessage?: string;
 };
 
@@ -20,7 +20,7 @@ export function InputDemo({
   label = "",
   callback = () => {},
   // successMessage = "looks good",
-  // errorMessage = "",
+  errorMessage = "",
   ...props
 }: InputDemoProps) {
   const [id, setId] = useState("");
@@ -43,7 +43,7 @@ export function InputDemo({
         className={`${inputClassName} `}
       />
       {/* <div className="valid-feedback text-green-600 text-sm">{successMessage}</div> */}
-      {/* <div className="invalid-feedback text-red-600 text-sm">{errorMessage}</div> */}
+      <div className="invalid-feedback text-red-600 text-xs">{errorMessage}</div>
     </div>
   );
 }

@@ -5,20 +5,28 @@ import { useAuthContext } from "@/contexts/AuthContext";
 import { ButtonDemo, InputDemo } from "@/components/index";
 import Link from "next/link";
 import localData from "@/localData";
+import useJoiValidation from '@/hooks/joi-validation/useJoiValidation'
 
 const { googleLogo } = localData.images;
+
+type ValidationResult = {
+  error?: {
+    details: {
+      path: string[];
+      message: string;
+    }[];
+  };
+};
 
 const Register = () => {
   const [state, setState] = useState({ email: "", password: "", repeatPassword: "" });
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(false);
   const { handleSignUp, handleSignInWithGoogle } = useAuthContext();
 
-  const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    handleSignUp({ email: state.email, password: state.password, setIsLoading });
-    
-  };
+    const { validateSignUp } = useJoiValidation();
+    const [wasSubmitted, setWasSubmitted] = useState(false);
+    const [result, setResult] = useState<ValidationResult>({});
+    const [errorMessages, setErrorMessages] = useState<Record<string, string>>({});
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setState((prev) => ({
@@ -27,18 +35,34 @@ const Register = () => {
     }));
   };
 
-  useEffect(() => {
-    if (state.password !== state.repeatPassword) {
-      setError(true);
-    } else {
-      setError(false);
+  const onSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const { error } = validateSignUp(state);
+    console.log(error, ' jjj')
+    if (!error) {
+      handleSignUp({ email: state.email, password: state.password, setIsLoading });
+      console.log("Submit");
     }
-  }, [state]);
+    if (!error) return;
+    setWasSubmitted(true);
+  };
+
+  useEffect(() => setResult(validateSignUp(state)), [state]);
+
+  useEffect(() => {
+    if (!wasSubmitted) return;
+    const errors: Record<string, string> = {};
+    result?.error?.details.forEach((item) => {
+      if (errors[item.path[0]]) return;
+      errors[item.path[0]] = item.message;
+    });
+    setErrorMessages(errors);
+  }, [result, wasSubmitted]);
 
   return (
     <div className="register-page min-h-[100vh] flex items-center justify-center ">
       <div className="wrapper  w-full max-w-[360px] mx-auto shadow-lg !p-5 border border-gray-100 rounded-[15px]">
-        <form onSubmit={onSubmit} className="m-5 max-w-[360px] mx-auto">
+        <form onSubmit={onSubmit} className={`${wasSubmitted ? "was-submitted" : ""} m-5 max-w-[360px] mx-auto`}>
           <h2 className="text-2xl text-center mb-5">Register</h2>
 
           <InputDemo
@@ -48,6 +72,8 @@ const Register = () => {
             type="text"
             callback={(e) => onChange(e)}
             className="mb-5"
+            errorMessage={errorMessages.email}
+            inputClassName={errorMessages.email ? "is-invalid" : "is-valid"}
           />
 
           <InputDemo
@@ -57,6 +83,8 @@ const Register = () => {
             type="text"
             callback={(e) => onChange(e)}
             className="mb-5"
+            errorMessage={errorMessages.password}
+            inputClassName={errorMessages.password ? "is-invalid" : "is-valid"}
           />
           <InputDemo
             label="Repeat Password"
@@ -65,12 +93,14 @@ const Register = () => {
             type="text"
             callback={(e) => onChange(e)}
             className="mb-5"
+            errorMessage={errorMessages.repeatPassword}
+            inputClassName={errorMessages.repeatPassword ? "is-invalid" : "is-valid"}
           />
 
           <ButtonDemo
             text={`${isLoading ? "Signing Up..." : "Sign Up"}`}
             className={`w-full mb-5 text-sm`}
-            disabled={isLoading || error}
+            // disabled={isLoading || error}
           />
           <p className="text-xs text-gray-500 text-center mb-5">
             Already have an account?{" "}
