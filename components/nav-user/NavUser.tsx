@@ -14,6 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {ModeToggle} from '@/components/index'
 
 import localData from "@/localData";
 
@@ -31,8 +32,8 @@ const NavUser = ({
 
   const { handleSignOut } = useAuthContext();
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger className="flex gap-2 items-center outline-none cursor-pointer hover:bg-gray-50 px-2 py-1 rounded-sm">
+    <DropdownMenu modal={false}>
+      <DropdownMenuTrigger className="flex gap-2 items-center outline-none cursor-pointer dark:hover:bg-secondary hover:bg-gray-50 px-2 py-1 rounded-sm">
       
           <Avatar className="h-8 w-8 rounded-full border">
             <AvatarImage src={user.avatar} alt={user.name} />
@@ -85,6 +86,9 @@ const NavUser = ({
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
+          <DropdownMenuItem>
+            light/dark toggler  <ModeToggle/>
+          </DropdownMenuItem>
         <DropdownMenuItem onClick={handleSignOut}>
           <LogOut />
           Log out

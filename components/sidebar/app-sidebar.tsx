@@ -76,7 +76,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <SidebarMenuButton
                   asChild
                   className={`${
-                    pathname == item.url ? "!bg-primary !text-white" : ""
+                    pathname == item.url
+                      ? "bg-primary hover:bg-primary text-white hover:text-white"
+                      : ""
                   } rounded-full px-3 py-[18px]`}
                 >
                   <Link href={item.url}>
@@ -97,7 +99,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <SidebarMenuButton
                   asChild
                   className={`${
-                    pathname == item.url ? "!bg-primary !text-white" : ""
+                    pathname == item.url
+                      ? "bg-primary hover:bg-primary text-white hover:text-white"
+                      : ""
                   } rounded-full px-3 py-[18px]`}
                 >
                   <Link href={item.url}>
@@ -126,7 +130,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarContent>
 
       <SidebarFooter className="px-5">
-        <h6 className="mb-5 text-xs text-gray-400 group-data-[collapsible=icon]:opacity-0 duration-800 whitespace-nowrap">Created by Next.js</h6>
+        <h6 className="mb-5 text-xs text-gray-400 group-data-[collapsible=icon]:opacity-0 duration-800 whitespace-nowrap">
+          Created by Next.js
+        </h6>
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

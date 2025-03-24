@@ -2,16 +2,30 @@
 
 import React, { useState, useEffect } from "react";
 import { useApiContext } from "@/contexts/ApiContext";
-import { InputDemo, ButtonDemo } from "@/components/index";
+import { InputDemo, ButtonDemo, BreadcrumbDemo } from "@/components/index";
 import localData from "@/localData";
 import useUtil from "@/hooks/useUtil";
 
 const { placeholderImage } = localData.images;
 
+const breadcrumbItems = [
+  {
+    href: "/",
+    label: "Home",
+  },
+  {
+    label: "Pages",
+  },
+];
+
 const Pages = () => {
   return (
     <main className="pages-page p-5">
-      <h2 className="text-2xl">Pages</h2>
+      <h2 className="text-2xl mb-3">Pages</h2>
+      <BreadcrumbDemo items={breadcrumbItems} />
+      <br />
+      <br />
+
       <AddMovie />
       <Movies />
     </main>

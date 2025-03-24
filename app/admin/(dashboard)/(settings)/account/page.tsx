@@ -2,10 +2,20 @@
 
 import React, { useEffect, useState } from "react";
 import { useAuthContext } from "@/contexts/AuthContext";
-import { ButtonDemo, InputDemo } from "@/components/index";
+import { ButtonDemo, InputDemo, BreadcrumbDemo } from "@/components/index";
 import localData from "@/localData";
 
 const { googleLogo } = localData.images;
+
+const breadcrumbItems = [
+  {
+    href: "/",
+    label: "Home",
+  },
+  {
+    label: "Account",
+  },
+];
 
 const Account = () => {
   const { handleLinkEmailPasswordAccount, currentUser, handleSignInWithGoogle } = useAuthContext();
@@ -41,9 +51,14 @@ const Account = () => {
   }, [currentUser]);
   return (
     <main className="p-5">
-      <h2 className="text-2xl">Account</h2>
+      <h2 className="text-2xl mb-3">Account</h2>
+      <BreadcrumbDemo items={breadcrumbItems} />
+      <br />
+      <br />
+      <br />
+
       <div className="email-password-login-method   flex flex-wrap gap-5 ">
-        <div className="min-h-[200px] flex-1 min-w-[300px] max-w-[400px]  p-3 bg-gray-50 rounded-lg">
+        <div className="min-h-[200px] flex-1 min-w-[300px] max-w-[400px]  p-3 bg-gray-50 dark:bg-secondary rounded-lg">
           <h2 className="text-1xl mb-5 text-sm font-bold">Email/password login method:</h2>
           {isEmailPasswordMethodEnabled ? (
             <span className="text-success text-sm">Enabled</span>
@@ -70,7 +85,7 @@ const Account = () => {
           )}
         </div>
 
-        <div className="min-h-[200px] flex-1 min-w-[300px] max-w-[400px] p-3 bg-gray-50 rounded-lg">
+        <div className="min-h-[200px] flex-1 min-w-[300px] max-w-[400px] p-3 bg-gray-50 dark:bg-secondary rounded-lg">
           <h2 className="text-1xl mb-5 text-sm font-bold">Google sign in method:</h2>
           {isGoogleSignInMethodEnabled ? (
             <span className="text-success text-sm">Enabled</span>

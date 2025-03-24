@@ -2,7 +2,17 @@
 
 import React, { useEffect, useState } from "react";
 import { useAuthContext } from "@/contexts/AuthContext";
-import { ButtonDemo, InputDemo } from "@/components/index";
+import { ButtonDemo, InputDemo, BreadcrumbDemo } from "@/components/index";
+
+const breadcrumbItems = [
+  {
+    href: "/",
+    label: "Home",
+  },
+  {
+    label: "Update Profile",
+  },
+];
 
 const UpdateProfile = () => {
   const [state, setState] = useState({ email: "", password: "", repeatPassword: "" });
@@ -40,8 +50,12 @@ const UpdateProfile = () => {
 
   return (
     <main className="p-5">
-      <h2 className="text-2xl ">Update Profile</h2>
-      <div className="update-profile-page min-h-[60vh] flex items-center justify-center ">
+      <h2 className="text-2xl mb-3">Update Profile</h2>
+      <BreadcrumbDemo items={breadcrumbItems} />
+      <br />
+      <br />
+
+      <div className="update-profile-page  flex items-center justify-center ">
         <div className="wrapper  w-full max-w-[360px] mx-auto shadow-lg !p-5 border border-gray-100 rounded-[15px]">
           <form onSubmit={onSubmit} className="m-5 max-w-[360px] mx-auto">
             <h2 className="text-2xl text-center mb-5">Update Profile</h2>
