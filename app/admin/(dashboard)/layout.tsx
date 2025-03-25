@@ -1,13 +1,15 @@
-"use client";
-
 import { AppSidebar } from "@/components/sidebar/app-sidebar";
-import { useAuthContext } from "@/contexts/AuthContext";
 import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { NavUser } from "@/components/index";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Admin Panel",
+  description: "CRM Admin Panel — oversee and manage all your CRM operations.",
+};
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const { currentUser } = useAuthContext();
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -16,16 +18,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <div className="flex items-center justify-between gap-2 px-4 w-full">
             <SidebarTrigger className="-ml-1" />
             <Separator orientation="vertical" className="mr-2 h-4" />
-            <NavUser
-              user={{
-                name: currentUser?.displayName || "",
-                email: currentUser?.email || "",
-                avatar: currentUser?.photoURL || "",
-              }}
-            />
+            <NavUser />
           </div>
         </header>
-
         {children}
       </SidebarInset>
     </SidebarProvider>

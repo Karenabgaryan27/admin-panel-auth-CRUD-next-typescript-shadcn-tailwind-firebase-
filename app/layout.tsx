@@ -24,8 +24,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Admin Panel",
-  description: "CRM Admin Panel — oversee and manage all your CRM operations.",
+  title: "Home",
+  description: "Home page description.",
 };
 
 export default function RootLayout({
