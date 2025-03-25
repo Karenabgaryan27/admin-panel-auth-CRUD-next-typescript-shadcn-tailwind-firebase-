@@ -1,7 +1,10 @@
-"use client";
-
 import React from "react";
-// import { useGlobalContext } from "@/contexts/context";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Home",
+  description: "Home page description.",
+};
 
 export default function Home() {
   return (

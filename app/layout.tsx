@@ -23,9 +23,44 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
+// const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://your-website-name.vercel.app";
+
 export const metadata: Metadata = {
-  title: "Home",
-  description: "Home page description.",
+  title: "Website",
+  description: "Your website description",
+  // icons: {
+  //   icon: [{ rel: "icon", url: "/assets/images/favicon.svg" }],
+  //   apple: "/assets/images/favicon.svg",
+  // },
+  // openGraph: {
+  //   title: "Website",
+  //   description: "Your site description.",
+  //   url: `${siteUrl}`,
+  //   siteName: "Website-page",
+  //   images: [
+  //     {
+  //       url: `${siteUrl}/assets/images/og-image.jpg`,
+  //       width: 612,
+  //       height: 334,
+  //       alt: "Your Website Logo",
+  //     },
+  //   ],
+  //   locale: "en_US",
+  //   type: "website",
+  // },
+  // twitter: {
+  //   card: "summary_large_image",
+  //   title: "Website",
+  //   description: "Your website description..",
+  //   images: [
+  //     {
+  //       url: `${siteUrl}/assets/images/og-image.jpg`,
+  //       width: 612,
+  //       height: 334,
+  //       alt: "Your Website Logo",
+  //     },
+  //   ],
+  // },
 };
 
 export default function RootLayout({
