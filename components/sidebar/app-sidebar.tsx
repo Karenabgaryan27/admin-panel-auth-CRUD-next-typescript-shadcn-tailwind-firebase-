@@ -76,7 +76,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <SidebarMenuButton
                   asChild
                   className={`${
-                    pathname == item.url
+                    // pathname == item.url
+                    item.url !== "/" && pathname.startsWith(item.url)
                       ? "bg-primary hover:bg-primary text-white hover:text-white"
                       : ""
                   } rounded-full px-3 py-[18px]`}
@@ -99,7 +100,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <SidebarMenuButton
                   asChild
                   className={`${
-                    pathname == item.url
+                    // pathname == item.url
+                    item.url !== "/" && pathname.startsWith(item.url)
                       ? "bg-primary hover:bg-primary text-white hover:text-white"
                       : ""
                   } rounded-full px-3 py-[18px]`}

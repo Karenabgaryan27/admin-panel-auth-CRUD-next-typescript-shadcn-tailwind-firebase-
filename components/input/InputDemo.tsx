@@ -35,7 +35,7 @@ export function InputDemo({
 
   return (
     <div className={`field grid items-center gap-1.5 ${className}`}>
-      {label && <Label htmlFor={id} className=" font-semibold text-gray-700">{label}</Label>}
+      {label && <Label htmlFor={id} className=" font-medium">{label}</Label>}
       <Input
         id={id}
         {...props}

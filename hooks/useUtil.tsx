@@ -1,7 +1,10 @@
 import React from "react";
 
 const useUtil = () => {
+
   type FileInput = File | Blob;
+
+
   const compressImage = (
     file: FileInput,
     targetSizeKB: number = 300,
@@ -9,6 +12,11 @@ const useUtil = () => {
     quality: number = 0.8
   ): Promise<Blob> => {
     return new Promise((resolve, reject) => {
+      if (file.size / 1024 <= targetSizeKB) {
+        // If file is already under target size, resolve with the original file
+        resolve(file);
+        return;
+      }
       const img = new Image();
       img.src = URL.createObjectURL(file);
 

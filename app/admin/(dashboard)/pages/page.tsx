@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useApiContext } from "@/contexts/ApiContext";
 import { InputDemo, ButtonDemo, BreadcrumbDemo } from "@/components/index";
 import localData from "@/localData";
@@ -53,7 +53,7 @@ const Movies = () => {
 };
 
 const SingleMovie = ({ id = "", name = "", releaseDate = "", imageBase64 = placeholderImage }) => {
-  const [state, setState] = useState({ name: "", releaseDate: 0 , imageBase64: "" });
+  const [state, setState] = useState({ name: "", releaseDate: 0, imageBase64: "" });
   const [isLoading, setIsLoading] = useState(false);
   const { deleteMovie, updateMovie } = useApiContext();
 
@@ -101,7 +101,7 @@ const SingleMovie = ({ id = "", name = "", releaseDate = "", imageBase64 = place
       </div>
 
       <div className="card-content mb-3 h-0 pt-[56.25%] relative">
-        <img className="rounded-lg absolute w-full h-full top-0 object-cover" src={imageBase64} alt=""  />
+        <img className="rounded-lg absolute w-full h-full top-0 object-cover" src={imageBase64} alt="" />
       </div>
 
       <div className="card-footer">
@@ -120,7 +120,7 @@ const SingleMovie = ({ id = "", name = "", releaseDate = "", imageBase64 = place
             callback={(e) => onChange(e)}
             className="mb-3"
           />
-           <InputDemo type="file" callback={(e) => handleUpload(e)} className="mb-5" />
+          <InputDemo type="file" callback={(e) => handleUpload(e)} className="mb-5" />
           <br />
           <ButtonDemo
             text={`${isLoading ? "Updating..." : "Update Movie"}`}
@@ -143,7 +143,7 @@ const AddMovie = () => {
   const [state, setState] = useState({ name: "", releaseDate: 0, imageBase64: "" });
   const [isLoading, setIsLoading] = useState(false);
   const { addMovie } = useApiContext();
-
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { compressImage, convertToBase64 } = useUtil();
 
   const onSubmit = (e: React.FormEvent) => {
@@ -154,7 +154,8 @@ const AddMovie = () => {
       imageBase64: state.imageBase64,
       setIsLoading,
     });
-    setState({ name: "", releaseDate: 0, imageBase64: "" })
+    setState({ name: "", releaseDate: 0, imageBase64: "" });
+    if (e.target instanceof HTMLFormElement)   e.target.reset();
   };
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -179,7 +180,7 @@ const AddMovie = () => {
 
   return (
     <div className="wrapper  w-full max-w-[360px] mx-auto shadow-lg !p-5 border border-gray-100 rounded-[15px] mb-[100px]">
-      <form onSubmit={onSubmit} className="m-5 max-w-[360px] mx-auto">
+      <form onSubmit={onSubmit} className="m-5 max-w-[360px] mx-auto add-movie-form ">
         <h2 className="text-2xl text-center mb-5">Add Movie</h2>
 
         <InputDemo
@@ -202,7 +203,7 @@ const AddMovie = () => {
           value={state.releaseDate}
         />
 
-        <InputDemo type="file" callback={(e) => handleUpload(e)} className="mb-5" />
+        <InputDemo type="file" callback={(e) => handleUpload(e)} className="mb-5 find-me" />
 
         <ButtonDemo
           text={`${isLoading ? "Adding..." : "Add Movie"}`}

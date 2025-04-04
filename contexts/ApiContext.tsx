@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, createContext, useContext } from "react";
 import { db, auth } from "@/config/firebase";
-import { collection, getDocs, addDoc, deleteDoc, updateDoc, doc } from "firebase/firestore";
+import { collection, getDocs, addDoc, deleteDoc, updateDoc, doc, query, orderBy } from "firebase/firestore";
 import useAlert from "@/hooks/alert/useAlert";
 
 type StateType = {
@@ -34,7 +34,7 @@ export default function ApiProvider({
     },
     users: [],
   });
-  const {  successAlert,  errorAlert } = useAlert();
+  const { successAlert, errorAlert } = useAlert();
 
   const moviesCollectionRef = collection(db, "movies");
 
@@ -43,12 +43,13 @@ export default function ApiProvider({
     setState((prev) => ({ ...prev, movies: { ...prev.movies, isLoading: true } }));
 
     try {
-      const res = await getDocs(moviesCollectionRef);
+      const orderedMoviesQuery = query(moviesCollectionRef, orderBy("createdAt", "desc"));
+      const res = await getDocs(orderedMoviesQuery);
       const data = res.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
       setState((prev) => ({ ...prev, movies: { isLoading: false, list: data } }));
       console.log(data);
-    } catch (err:any) {
-      errorAlert(err.message || 'Internal server error. Please try again later.')
+    } catch (err: any) {
+      errorAlert(err.message || "Internal server error. Please try again later.");
       console.error(err, "=getMovies= request error");
     }
     setIsLoading(false);
@@ -69,8 +70,8 @@ export default function ApiProvider({
       getMovies({});
       console.log(res);
       successAlert("Movie has been created successfully.");
-    } catch (err:any) {
-      errorAlert(err.message || 'Internal server error. Please try again later.')
+    } catch (err: any) {
+      errorAlert(err.message || "Internal server error. Please try again later.");
       console.error(err, "=addMovie= request error");
     }
     setIsLoading(false);
@@ -89,8 +90,8 @@ export default function ApiProvider({
       await updateDoc(movieDoc, filteredData);
       getMovies({});
       successAlert("Movie has been updated successfully.");
-    } catch (err:any) {
-      errorAlert(err.message || 'Internal server error. Please try again later.');
+    } catch (err: any) {
+      errorAlert(err.message || "Internal server error. Please try again later.");
       console.error(err, "=updateMovie= request error");
     }
     setIsLoading(false);
@@ -103,8 +104,8 @@ export default function ApiProvider({
       await deleteDoc(movieDoc);
       getMovies({});
       successAlert("Movie has been deleted successfully.");
-    } catch (err:any) {
-      errorAlert(err.message || 'Internal server error. Please try again later.')
+    } catch (err: any) {
+      errorAlert(err.message || "Internal server error. Please try again later.");
       console.error(err, "=deleteMovie= request error");
     }
     setIsLoading(false);
