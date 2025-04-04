@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useApiContext } from "@/contexts/ApiContext";
 import { InputDemo, ButtonDemo, BreadcrumbDemo } from "@/components/index";
 import localData from "@/localData";
@@ -143,7 +143,6 @@ const AddMovie = () => {
   const [state, setState] = useState({ name: "", releaseDate: 0, imageBase64: "" });
   const [isLoading, setIsLoading] = useState(false);
   const { addMovie } = useApiContext();
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const { compressImage, convertToBase64 } = useUtil();
 
   const onSubmit = (e: React.FormEvent) => {
