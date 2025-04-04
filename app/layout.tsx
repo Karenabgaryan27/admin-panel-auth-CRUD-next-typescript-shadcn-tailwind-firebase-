@@ -28,10 +28,10 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Website",
   description: "Your website description",
-  // icons: {
-  //   icon: [{ rel: "icon", url: "/assets/images/favicon.svg" }],
-  //   apple: "/assets/images/favicon.svg",
-  // },
+  icons: {
+    icon: [{ rel: "icon", url: "/assets/images/favicon.svg" }],
+    apple: "/assets/images/favicon.svg",
+  },
   // openGraph: {
   //   title: "Website",
   //   description: "Your site description.",
